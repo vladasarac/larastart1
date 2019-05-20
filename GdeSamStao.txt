@@ -1,0 +1,44 @@
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=CowsopJhX3M&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=2
+instaliram laravel 5.6 komandom 'composer create-project laravel/laravel larastart "5.6.*" ' zatim komanda 'npm install' zatim instaliramo paket adminlte-
+-komandom 'npm install admin-lte@v3.0.0-alpha.2 --save'
+pokrecemo aplikaciju komandom 'php artisan serve' i idemo na http://127.0.0.1:8000
+u .env fajlu podesav amo bazu da se zove 'larastart'
+komandom 'php artisan make:auth' pravimo autentifikaciju, i migriramo komandom 'php artisan migrate', da bi se sredio error koji vraca baza u fajlu -
+-'app\Providers\AppServiceProvider.php' prvo uvozimo use Illuminate\Support\Facades\Schema; a u boot() metodu pisemo- Schema::defaultStringLength(191);
+opet migriramo komandom 'php artisan migrate:fresh' da bi obrisao prethodni migrate, pravimo usera admin, admin@yahoo.com itd
+pravim novi vju tj layout master.blade.php u 'resources\views\layouts' u taj fajl ubacujemo html sa stranice
+- view-source:https://adminlte.io/themes/dev/AdminLTE/starter.html i prepravljamo ga malo, sada vju home.blade.php podesavamo da koristi master.blade.php-
+-kao layout tj da ga extenduje
+u fajlu 'resources\assets\js\bootstrap.js' dodajemo require('admin-lte'); a u fajlu 'resources\assets\sass\app.scss' dodajemo -
+- @import '~admin-lte/dist/css/adminlte.css'; i onda pustamo u git-bashu 'npm run watch'
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=cKhTwApvuyw&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=3
+instaliramo font awesome komanda 'npm install @fortawesome/fontawesome-free' i onda u 'resources\assets\sass\app.scss' dodajemo ovo -
+$fa-font-path: "../webfonts";
+//font-awesome
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
+i onda je preradjivan master.blade.php layout
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=G8vytBtPnjA&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=4
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
