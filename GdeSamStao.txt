@@ -29,9 +29,18 @@ i onda je preradjivan master.blade.php layout
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Lekcija - https://www.youtube.com/watch?v=G8vytBtPnjA&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=4
-
+pushovo na GitHub, prvo komanda 'git init' pa onda 'git add . ' pa onda 'git commit -m "first commit"', pravi se na GitHubu repo larastart1 i onda kopir-
+-am komande 'git remote add origin https://github.com/vladasarac/larastart1.git' i onda 'git push -u origin master', sada imam novi repo na GitHubu -
+- https://github.com/vladasarac/larastart1
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=OcsKODgaOb8&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=5
+sredjivanje menija i div-ova u master.blade.php layout-u i push na GitHub
+
+
+
+
 
 
 
