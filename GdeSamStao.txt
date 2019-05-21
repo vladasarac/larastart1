@@ -38,14 +38,55 @@ pushovo na GitHub, prvo komanda 'git init' pa onda 'git add . ' pa onda 'git com
 Lekcija - https://www.youtube.com/watch?v=OcsKODgaOb8&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=5
 sredjivanje menija i div-ova u master.blade.php layout-u i push na GitHub
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Lekcija - https://www.youtube.com/watch?v=Gx93Bz62AII&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=6
+komandom 'npm install vue-router' instaliramo vue router dokumentacija - https://router.vuejs.org
+u 'resources\assets\js\app.js' pisemo
+import VueRouter from 'vue-router'
+Vue.use(VueRouter);
+i onda importujemo nove komponente Dashboard.vue i Profile.vue
+const routes = [
+    { path: '/dashboard', component: require('./components/Dashboard.vue') },
+    { path: '/profile', component: require('./components/Profile.vue') }
+  ]
+i onda ovo
+const router = new VueRouter({
+    routes // short for `routes: routes`
+});
+i dodajemo ovo na 33 liniju router -
+const app = new Vue({
+    el: '#app',
+    router
+});
+u folderu 'resources\assets\js\components' pravimo jos 2 vue komponenet Dashboard.vue i Profile.vue i kopiramo iu njih sadrzaj ExampleComponente.vue -
+- moze se uraditi sa ctrl+shift+s na ExampleComponente.vue i samo se promeni ime
+Dodajemo u layout master.blade.php u head csrf token <meta name="csrf-token" content="{{ csrf_token() }}"> i divu klase wrapper (odmah ispod body taga)-
+- dodajemo id #app posto se au app.js vue komponenta kaci na taj element (id="app")
+sad pravimo linkove ka komponentama i u master.blade.php menjamo link <a href="#" class="nav-link"> u <router-link to="/dashboard" class="nav-link"> -
+-i takodje link ka Profile stranici u <router-link to="/profile" class="nav-link">
+dodajemo <router-view></router-view> u div <div class="container-fluid"> tj tu cemo prikazivati vue komponente
+sada kad kliknemo link Profile prikazuje u <div class="container-fluid"> Profile.vue komponentu isto i za Dashboard.vue komponentu i link
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
+Lekcija - https://www.youtube.com/watch?v=z6yH6iB76nc&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=7
+Posto je url kad se kliknu linkovi Profile i Dashboard u levom meniju bio http://127.0.0.1:8000/home#/Dashboard ili http://127.0.0.1:8000/home#/Profile
+da bi to promenili u 'resources\assets\js\app.js' dodajemo mode: 'history', u const router = new VueRouter({ i sada su linkovi normalni tj -
+-http://127.0.0.1:8000/dashboard i http://127.0.0.1:8000/profile
+takodje u web.php iz routes foldera dodajemo Route::get('{path}', "HomeController@index")->where( 'path', '([A-z\d-\/_.]+)?'); i sada je moguce refresh-
+-ovati stranice /dashboard i /profile
+Sada da bi aktivan link imao drugaciju boju od drugih u levoj navigaciji a kada se klikne sam vue mu dodaje klasu .router-link-exact-active u app.scss - 
+- iz foldera 'resources\assets\sass' dodajemo
+.router-link-exact-active{
+  background-color: #3f51b5;
+  color: #fff !important;
+}
+i sada ce aktivan link koji kliknemo imati drugaciju boju i background
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-
+Lekcija - https://www.youtube.com/watch?v=6dR2sUZ596w&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=8
 
 
 
