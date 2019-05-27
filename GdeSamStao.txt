@@ -87,6 +87,181 @@ i sada ce aktivan link koji kliknemo imati drugaciju boju i background
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Lekcija - https://www.youtube.com/watch?v=6dR2sUZ596w&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=8
+Logout
+iz app.blade.php layouta kopiramo link i formu koju on poziva za logout (forma ide na rutu /logout) i ubacujemo to u master.blade.php layout i sada kad -
+-se u levoj navigaciji klikne lin Logout vrsi se logout
+dodali smo u _variables.scss iz foldera 'resources\assets\sass' klase za osnovne boje i sada mozemo dodati u vjuovima te klase elementima
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=zP0uPDuoDHE&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=9
+U folderu 'resources\assets\js\components' pravimo novu komponent Users.vue i registrujemo je u app.js iz foldera 'resources\assets\js'-
+-{ path: '/users', component: require('./components/Users.vue') }, a u master.blade.php pravimo link <router-link to="/users" class="nav-link"> i sada -
+-kad u levom meniju kliknemo link users ucitava se komponenta Users.vue
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=KskOZqvIZow&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=10
+Dodacemo u Profile.vue komponentu tabelu koja prikazuje sve usere, uzimamo html sa https://adminlte.io/themes/dev/AdminLTE/pages/tables/simple.html
+i onda smo sredjivali tu tabelu da izgleda kako treba, dodat je modal window za prikaz forme za dodavanje novog usera itd
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11
+instaliracemo paket sa GitHuba za validaciju forme (URL - https://github.com/cretueusebiu/vform) komanda 'npm i axios vform'
+u app.js iz 'resources\assets\js' dodajemo - 
+import { Form, HasError, AlertError } from 'vform'
+window.Form = Form;
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+ovaj je dodao ove kolone u migraciju za 'users' tabelu
+$table->string('type')->default('user');
+$table->mediumText('bio')->nullable();
+$table->string('photo')->default('profile.png');
+ovo dodajemo u export default na dnu Users.vue komponente - 
+data(){
+  return{
+    form: new Form({
+      name: '',
+      email: '',
+      password: '',
+      type: '',
+      bio: '',
+      photo: '',
+    })
+  }
+},
+i onda smo u modalu u Users.vue komponenti napravili formu koja je bajnodvana za ovaj objekat i koja ce sluziti za kreiranje novog usera 
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=b6ak-VXIGqY&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=12
+API resorce contrtoller
+Formu koju smo napravili u modal windows-u u komponenti User.vue uokvirujemo <form> tagom koji na sabmit poziva funkciju crerateUser i preventuje ssabmit
+<form @submit.prevent="createUser"> 
+U export default u User.vue komponenti pravimop sekciju methods i u njoj metod createUser() koji ce hendlovati sabmit forme
+u njemu pise samo da gadja POST rutu '/api/user' - this.form.post('/api/user'); tj store() metod API UserControllera koji cemo napraviti
+Komandom 'php artisan make:controller API/UserController --api' pravimo api UserController u 'app\Http\Controllers\API' razlikuje se od obicnog kontrolera-
+-jer nema metode za ucitavanje vjuova kao edit() ili create() 
+U api.php iz foldera 'routes' pravimo resorce rute za API UserController iz 'app\Http\Controllers\API' 
+Route::apiResources(['user' => 'API\UserController']);
+sad aposle konmande 'php artisan route:list' prikazuje 'api/user' rute
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=lpcNVJEB2G4&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=13
+uradios am komandu 'php artisan migrate:refresh' posto je ovaj menjao migraciju za 'users' tabelu i u modelu User.php dodajem u fillable array nova polja
+protected $fillable = [
+  'name', 'email', 'password', 'bio', 'photo', 'type'
+];
+i dodajem u store() metod API UserCOntrollera da upise novog usera u bazu
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=352_GfBJA1U&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=14
+Validacija requesta za dodavanje novog usera u API UserController-u
+$this->validate($request, [
+    'name' => 'required|string|max:191',
+    'email' => 'required|string|email|max:191|unique:users',
+    'password' => 'required|string|min:6',
+]);
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=bUXhGw4aQtA&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=15
+U API UserController dodajemo u index() metod return User::latest()->paginate(10); da vadi po 10 najnovijih usera, a u Users.vue komponenti dodajemo metod
+-loadUsers(){
+    axios.get("api/user").then(({data}) => (this.users = data.data));
+},
+koji poziva index() iz API UserController-a i dodajemo da u tabeli u Users.vue prikaze usere koje vrati kontroler, koristimo v-for petlju
+<tr v-for="user in users" :key="user.id">
+          <td>{{user.id}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.type}}</td>
+              <td>{{user.created_at}}</td>
+              <td>
+              <a href="#">
+                  <i class="fa fa-edit blue"></i>
+              </a>
+              /
+              <a href="#">
+                  <i class="fa fa-trash red"></i>
+              </a>
+          </td>
+</tr>
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=bV9YsIi-FUU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=16
+U app.js iz 'resources\assets\js' pravimo filter upText koji kad se pozove u komponenti prebacuje prvi karakter stringa u upper case i onda ga pozivamo kad
+- prikazujemo type kolonu u tabeli u komponenti Users.vue - <td>{{user.type | upText}}</td>
+Pravimo filter koji ce formatirati datum iz created_at kolone, prvo instaliramo moment komandom 'npm install moment --save' i onda ga importujemo u app.js-
+-iz 'resources\assets\js' import moment from 'moment'; i pravimo filter koji formatira created_at kolonu 'users' tabele -
+Vue.filter('myDate', function(created){
+    return moment(created).format('MMMM Do YYYY');
+});
+i onda u tabeli u komponenti Users.vue koristimo filter u <td> gde prikazujemo created_at kolonu <td>{{user.created_at | myDate}}</td>
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=-Hl4A5cMH_I&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=17
+pravljenje vue progress bara
+komandom 'npm install vue-progressbar --save' instaliramo paket, onda ga importujemo u app.js iz 'resources\assets\js'
+import VueProgressBar from 'vue-progressbar';
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '3px'
+});
+zatim u layoutu master.blade.php ispod taga <router-view></router-view> pisemo <vue-progress-bar></vue-progress-bar> , na kraju menjamo u methods sekciji -
+- u Users.vue komponenti metod createUser() tako da pre nego posalje POST request pokrene progress bar i kad dobije response da ga zavrsi 
+createUser(){
+    this.$Progress.start();
+    this.form.post('/api/user');
+    this.$Progress.finish();
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=qJt6EfbQu6E&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=18
+menjamo kreiranje usera tako da kad kreira usera zatvori modal window sa formom za kreiranje usera i prkaze stilizovani alert sa Success porukom, prvo -
+- intaliramo paket sweetalert koji prikazuje stilizovane alerte komnadom 'npm install sweetalert2 --save' (docs: https://sweetalert2.github.io/#download)
+U app.js iz 'resources\assets\js' importujemo paket
+import swal from 'sweetalert2';
+window.swal = swal;
+skidamo primer sa url - https://sweetalert2.github.io/#examples za toast alert i ubacujemo u app.js
+const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+i dodajemo u createUser() metod u Users.vue komponenti pre okidanje finisha za progressbar ovo
+$('#addNew').modal('hide'); //ovo je da zatvori modal window sa formom
+toast.fire({
+    type: 'success',
+    title: 'User created successfully'
+});
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lekcija - https://www.youtube.com/watch?v=AqO_afAc1kQ&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=19
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
